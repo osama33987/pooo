@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ورشة السعيد أبو السعود (أبو معاذ) | الفخامة والأثاث العمولة</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Alexandria:wght@300;400;500;600;700;800;900&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Alexandria', 'sans-serif'],
+                        serif: ['Amiri', 'serif'],
+                    },
+                    colors: {
+                        workshop: {
+                            bg: '#050403',
+                            card: '#120d09',
+                            border: 'rgba(212, 163, 89, 0.25)',
+                            gold: '#d4a359',
+                            goldLight: '#fbe2aa',
+                            goldHover: '#f0c27b',
+                            wood: '#8a401a',
+                            darkWood: '#1c0d06'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #050403;
+            color: #f3f4f6;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 50% 0%, rgba(212, 163, 89, 0.12) 0%, transparent 60%),
+                linear-gradient(to bottom, rgba(5, 4, 3, 0.94), rgba(5, 4, 3, 0.98));
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
+        }
+
+        #intro-screen {
+            position: fixed;
+            inset: 0;
+            z-index: 100;
+            background: radial-gradient(circle at center, #1a100a 0%, #050403 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: transform 1.2s cubic-bezier(0.77, 0, 0.175, 1), opacity 0.9s ease;
+        }
+
+        #intro-screen.intro-hidden {
+            transform: scale(1.12) translateY(-100%);
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        @keyframes goldGlow {
+            0%, 100% { box-shadow: 0 0 35px rgba(212, 163, 89, 0.25), inset 0 0 15px rgba(212, 163, 89, 0.15); }
+            50% { box-shadow: 0 0 70px rgba(212, 163, 89, 0.55), inset 0 0 30px rgba(212, 163, 89, 0.3); }
+        }
+
+        .intro-badge {
+            animation: goldGlow 3s infinite ease-in-out;
+        }
+
+        @keyframes sawRotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .saw-icon {
+            animation: sawRotate 12s linear infinite;
+        }
+
+        #cursor-glow {
+            position: fixed;
+            width: 600px;
+            height: 600px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(212, 163, 89, 0.12) 0%, rgba(138, 64, 26, 0.04) 50%, transparent 70%);
+            pointer-events: none;
+            transform: translate(-50%, -50%);
+            z-index: 0;
+            transition: transform 0.1s ease-out;
+        }
+
+        .glass-panel {
+            background: rgba(18, 13, 9, 0.82);
+            backdrop-filter: blur(24px);
+            border: 1px solid rgba(212, 163, 89, 0.22);
+            box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.7);
+        }
+
+        .tilt-card {
+            background: linear-gradient(145deg, rgba(28, 19, 13, 0.92), rgba(10, 7, 5, 0.98));
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(212, 163, 89, 0.18);
+            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+
+        .tilt-card:hover {
+            border-color: rgba(212, 163, 89, 0.65);
+            box-shadow: 0 25px 50px -12px rgba(212, 163, 89, 0.25);
+            transform: translateY(-8px);
+        }
+
+        .text-gradient-gold {
+            background: linear-gradient(135deg, #fff3d1 0%, #d4a359 50%, #99621e 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .btn-gold {
+            background: linear-gradient(135deg, #d4a359 0%, #a8722c 100%);
+            color: #050403;
+            font-weight: 800;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 20px rgba(212, 163, 89, 0.25);
+        }
+
+        .btn-gold:hover {
+            background: linear-gradient(135deg, #fce0a2 0%, #c2883a 100%);
+            box-shadow: 0 12px 30px rgba(212, 163, 89, 0.45);
+            transform: translateY(-2px);
+        }
+
+        @keyframes waPulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.6); }
+            50% { box-shadow: 0 0 0 22px rgba(34, 197, 94, 0); }
+        }
+        .wa-pulse { animation: waPulse 2.5s infinite; }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.9s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col font-sans relative">
+
+    <!-- شاشة الترحيب السينمائية -->
+    <div id="intro-screen">
+        <div class="text-center space-y-7 max-w-xl px-6 relative z-10">
+            <div class="p-6 rounded-full bg-workshop-card/80 border border-workshop-gold/50 text-workshop-gold w-fit mx-auto intro-badge relative backdrop-blur-xl">
+                <i data-lucide="disc" class="w-16 h-16 saw-icon"></i>
+                <div class="absolute -top-1 -right-1 p-2.5 rounded-full bg-gradient-to-r from-workshop-gold to-amber-300 text-black shadow-xl">
+                    <i data-lucide="sparkles" class="w-4 h-4"></i>
+                </div>
+            </div>
+            
+            <div class="space-y-3">
+                <span class="inline-block px-5 py-2 rounded-full bg-workshop-gold/10 border border-workshop-gold/30 text-workshop-gold text-xs font-bold tracking-wider uppercase">
+                    فن الأثاث والموبيليا العمولة
+                </span>
+                <h1 class="text-3xl md:text-5xl font-black text-gradient-gold tracking-wide leading-tight">
+                    السعيد أبو السعود (أبو معاذ)
+                </h1>
+                <p class="text-sm md:text-base text-gray-300 font-light max-w-md mx-auto leading-relaxed">
+                    تفصيل أثاث بيتك بكل أمانة.. جودة تعيش العمر كله
+                </p>
+            </div>
+
+            <div class="space-y-3 pt-2">
+                <div class="w-full max-w-xs mx-auto bg-workshop-card rounded-full h-2.5 border border-workshop-border/50 overflow-hidden relative p-0.5">
+                    <div id="intro-bar" class="bg-gradient-to-r from-workshop-wood via-workshop-gold to-amber-100 h-full rounded-full w-0 transition-all duration-300 ease-out shadow-lg"></div>
+                </div>
+                <p class="text-[11px] text-workshop-gold/70 tracking-widest font-semibold uppercase">جاري فتح أبواب الورشة...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- توهج الماوس -->
+    <div id="cursor-glow"></div>
+
+    <!-- زر الواتساب العائم -->
+    <a id="floating-wa-btn" href="#" target="_blank" class="fixed bottom-6 right-6 z-50 bg-emerald-600 text-white px-5 py-3.5 rounded-2xl shadow-2xl flex items-center gap-3.5 wa-pulse group transition-all duration-300 hover:scale-105 border border-emerald-400/30">
+        <i data-lucide="message-square" class="w-6 h-6"></i>
+        <span class="max-w-0 overflow-hidden whitespace-nowrap group-hover:max-w-xs transition-all duration-500 ease-in-out font-extrabold text-sm">تواصل مع المعلم سعيد</span>
+    </a>
+
+    <!-- القائمة العلوية -->
+    <header class="sticky top-0 z-40 glass-panel border-b border-workshop-border/30 px-6 py-4">
+        <div class="max-w-7xl mx-auto flex items-center justify-between">
+            <div class="flex items-center gap-3.5">
+                <div class="p-2.5 rounded-2xl bg-workshop-gold/10 border border-workshop-gold/40 text-workshop-gold shadow-inner">
+                    <i data-lucide="hammer" class="w-6 h-6"></i>
+                </div>
+                <div>
+                    <h1 class="font-extrabold text-base md:text-lg text-gradient-gold">السعيد أبو السعود (أبو معاذ)</h1>
+                    <p class="text-[11px] text-gray-400 font-light">متخصصون في تفصيل الأثاث والموبيليا العمولة</p>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-3">
+                <div id="owner-action-btns" class="hidden flex gap-2">
+                    <button onclick="openAddModal()" class="px-3.5 py-2.5 rounded-xl btn-gold text-xs flex items-center gap-1.5">
+                        <i data-lucide="plus" class="w-4 h-4"></i>
+                        <span>إضافة تصميم</span>
+                    </button>
+                    <button onclick="openVideoModal()" class="px-3.5 py-2.5 rounded-xl bg-workshop-wood text-white text-xs flex items-center gap-1.5 hover:opacity-90 font-bold border border-workshop-gold/30">
+                        <i data-lucide="video" class="w-4 h-4"></i>
+                        <span>إضافة فيديو</span>
+                    </button>
+                </div>
+                <button id="owner-btn" onclick="toggleOwnerMode()" class="px-4 py-2.5 rounded-xl border border-workshop-border text-xs text-workshop-gold hover:bg-workshop-gold/10 transition-all duration-300 flex items-center gap-2 font-bold">
+                    <i data-lucide="shield" class="w-4 h-4"></i>
+                    <span id="owner-btn-text">إدارة الورشة</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- المحتوى الرئيسي -->
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 py-12 space-y-24 z-10">
+
+        <!-- القسم الرئيسي (الواجهة) -->
+        <section class="text-center space-y-6 max-w-4xl mx-auto pt-4 reveal">
+            <span class="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-workshop-gold/10 border border-workshop-gold/30 text-workshop-gold text-xs font-bold tracking-wide shadow-lg">
+                <i data-lucide="sparkles" class="w-4 h-4"></i>
+                شغل عمولة أصلي يعيش معاك العمر كله
+            </span>
+            <h2 class="text-4xl md:text-6xl font-black text-white leading-tight tracking-tight">
+                من فكرة في بالك.. <span class="text-gradient-gold">لحد باب بيتك</span>
+            </h2>
+            <p class="text-gray-300 text-sm md:text-lg leading-relaxed max-w-2xl mx-auto font-light">
+                قولنا إنت محتاج إيه (غرفة نوم، انتريه، مطبخ، أو سفرة)، وإحنا هنفذهالك على أصولها وبالمقاسات اللي تناسب مساحة بيتك تماماً وبأعلى جودة خشب.
+            </p>
+        </section>
+
+        <!-- استمارة الطلب المباشر -->
+        <section class="glass-panel rounded-3xl p-6 md:p-10 space-y-8 reveal border border-workshop-gold/30 relative overflow-hidden">
+            <div class="absolute -top-24 -right-24 w-60 h-60 bg-workshop-gold/10 rounded-full blur-3xl pointer-events-none"></div>
+
+            <div class="text-center max-w-xl mx-auto space-y-2 relative z-10">
+                <h3 class="font-black text-2xl md:text-3xl text-gradient-gold">اطلب تفصيل قطعتك الخاصة</h3>
+                <p class="text-xs text-gray-300 font-light">حدد ما تريد تصنيعه واكتب المقاسات والتفاصيل التي ترغب بها ليصل طلبك فوراً للمعلم سعيد</p>
+            </div>
+
+            <form id="custom-order-form" onsubmit="sendCustomOrder(event)" class="space-y-5 max-w-xl mx-auto text-sm pt-2 relative z-10">
+                <div>
+                    <label class="block text-xs font-bold text-workshop-gold mb-2">اختر نوع الموبيليا المطلوبة</label>
+                    <select id="calc-type" class="w-full px-4 py-3 rounded-xl bg-workshop-bg border border-workshop-border text-white focus:outline-none focus:border-workshop-gold font-medium">
+                        <option value="غرفة نوم رئيسية">غرفة نوم رئيسية</option>
+                        <option value="غرفة أطفال / شبابي">غرفة أطفال / شبابي</option>
+                        <option value="انتريه / صالون / ركنة">انتريه / صالون / ركنة</option>
+                        <option value="مطبخ / دريسنج روم">مطبخ / دريسنج روم</option>
+                        <option value="طاولة سفرة بكراسي">طاولة سفرة بكراسي</option>
+                        <option value="تفصيل خاص على ذوقي">تفصيل خاص على ذوقي</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-workshop-gold mb-2">المقاسات والملاحظات المطلوبة</label>
+                    <textarea id="calc-notes" rows="3" placeholder="اكتب المقاسات، الألوان المفضلة، أو أي تفاصيل تريد مراعاتها في التنفيذ..." class="w-full px-4 py-3 rounded-xl bg-workshop-bg border border-workshop-border text-white focus:outline-none focus:border-workshop-gold resize-none"></textarea>
+                </div>
+
+                <div class="pt-2">
+                    <button type="submit" class="w-full py-4 rounded-xl btn-gold text-sm flex items-center justify-center gap-2 font-black shadow-lg">
+                        <i data-lucide="message-square" class="w-5 h-5"></i>
+                        <span>إرسال الطلب للمعلم سعيد مباشرة عبر الواتساب</span>
+                    </button>
+                </div>
+            </form>
+        </section>
+
+        <!-- قسم فيديوهات الورشة -->
+        <section class="space-y-10 reveal">
+            <div class="text-center space-y-2">
+                <span class="text-workshop-gold text-xs font-bold tracking-widest uppercase">شغل عالي التقفيل</span>
+                <h3 class="text-2xl md:text-4xl font-extrabold text-white">جولة داخل الورشة (فيديوهات الشغل والحرفية)</h3>
+                <p class="text-xs text-gray-400">شاهد مراحل تصنيع الأثاث والتقفيل العمولة خطوة بخطوة.</p>
+            </div>
+
+            <div id="videos-grid" class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- فيديوهات الورشة ستظهر هنا ديناميكياً -->
+            </div>
+        </section>
+
+        <!-- معرض أعمال الورشة (الصور) -->
+        <section class="space-y-10 reveal">
+            <div class="text-center space-y-2">
+                <span class="text-workshop-gold text-xs font-bold tracking-widest uppercase">معرض الأنيق</span>
+                <h3 class="text-2xl md:text-4xl font-extrabold text-white">نماذج من أعمال وتصاميم الورشة</h3>
+                <p class="text-xs text-gray-400">قم بتسجيل الدخول من زر "إدارة الورشة" بكلمة السر لإضافة صور أعمالك.</p>
+            </div>
+
+            <div class="flex items-center justify-center gap-3 overflow-x-auto pb-2" id="category-filters">
+                <!-- فلاتر التصنيفات -->
+            </div>
+            <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 items-start">
+                <!-- كروت المنتجات الفارغة -->
+            </div>
+        </section>
+    </main>
+
+    <!-- نافذة إضافة / تعديل منتج (صور) -->
+    <div id="product-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 hidden backdrop-blur-md">
+        <div class="glass-panel rounded-3xl w-full max-w-md p-6 space-y-6 relative border border-workshop-border">
+            <button onclick="closeModal()" class="absolute top-5 left-5 text-gray-400 hover:text-white">
+                <i data-lucide="x" class="w-6 h-6"></i>
+            </button>
+            <h3 id="modal-title" class="font-bold text-xl text-workshop-gold">إضافة تصميم جديد</h3>
+
+            <form id="product-form" onsubmit="handleFormSubmit(event)" class="space-y-4 text-sm">
+                <input type="hidden" id="prod-id">
+                <div>
+                    <label class="block text-gray-300 mb-1">اسم الموديل</label>
+                    <input type="text" id="prod-title" required class="w-full px-4 py-2.5 rounded-xl bg-workshop-bg border border-workshop-border text-white focus:outline-none focus:border-workshop-gold">
+                </div>
+                <div>
+                    <label class="block text-gray-300 mb-1">التصنيف</label>
+                    <select id="prod-category" required class="w-full px-4 py-2.5 rounded-xl bg-workshop-bg border border-workshop-border text-white focus:outline-none focus:border-workshop-gold">
+                        <option value="Bedrooms">غرف نوم وسفرة</option>
+                        <option value="Salons">أنتريهات وصالونات</option>
+                        <option value="Kitchens">مطابخ ودريسينج</option>
+                        <option value="Custom">تفصيل عمولة</option>
+                    </select>
+                </div>
+                
+                <div class="space-y-2">
+                    <label class="block text-gray-300">صورة التصميم</label>
+                    <div class="flex flex-col gap-2">
+                        <input type="file" id="prod-file" accept="image/*" onchange="handleFileSelect(event)" class="w-full text-xs text-gray-400 file:mr-2 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-workshop-gold/20 file:text-workshop-gold">
+                        <span class="text-center text-[10px] text-gray-500">أو ضع رابط الصورة مباشرة هنا</span>
+                        <input type="url" id="prod-image" placeholder="https://..." class="w-full px-4 py-2.5 rounded-xl bg-workshop-bg border border-workshop-border text-white text-xs focus:outline-none focus:border-workshop-gold">
+                    </div>
+                </div>
+
+                <div class="pt-2 flex gap-3">
+                    <button type="button" onclick="closeModal()" class="w-1/2 py-3 rounded-xl border border-white/10 text-gray-300 hover:bg-white/5 font-semibold">إلغاء</button>
+                    <button type="submit" class="w-1/2 py-3 rounded-xl btn-gold">حفظ</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- نافذة إضافة فيديو -->
+    <div id="video-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 hidden backdrop-blur-md">
+        <div class="glass-panel rounded-3xl w-full max-w-md p-6 space-y-6 relative border border-workshop-border">
+            <button onclick="closeVideoModal()" class="absolute top-5 left-5 text-gray-400 hover:text-white">
+                <i data-lucide="x" class="w-6 h-6"></i>
+            </button>
+            <h3 class="font-bold text-xl text-workshop-gold">إضافة فيديو جديد من الورشة</h3>
+
+            <form id="video-form" onsubmit="handleVideoSubmit(event)" class="space-y-4 text-sm">
+                <div>
+                    <label class="block text-gray-300 mb-1">عنوان الفيديو أو الوصف</label>
+                    <input type="text" id="vid-title" required placeholder="مثال: مرحلة تقفيل وتجميع غرفة نوم عمولة" class="w-full px-4 py-2.5 rounded-xl bg-workshop-bg border border-workshop-border text-white focus:outline-none focus:border-workshop-gold">
+                </div>
+                
+                <div class="space-y-2">
+                    <label class="block text-gray-300">ملف الفيديو</label>
+                    <div class="flex flex-col gap-2">
+                        <input type="file" id="vid-file" accept="video/*" onchange="handleVideoFileSelect(event)" class="w-full text-xs text-gray-400 file:mr-2 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-workshop-wood/30 file:text-workshop-gold">
+                        <span class="text-center text-[10px] text-gray-500">أو ضع رابط الفيديو مباشرة (مثل رابط يوتيوب أو ملف مباشر)</span>
+                        <input type="url" id="vid-url" placeholder="https://..." class="w-full px-4 py-2.5 rounded-xl bg-workshop-bg border border-workshop-border text-white text-xs focus:outline-none focus:border-workshop-gold">
+                    </div>
+                </div>
+
+                <div class="pt-2 flex gap-3">
+                    <button type="button" onclick="closeVideoModal()" class="w-1/2 py-3 rounded-xl border border-white/10 text-gray-300 hover:bg-white/5 font-semibold">إلغاء</button>
+                    <button type="submit" class="w-1/2 py-3 rounded-xl btn-gold">حفظ الفيديو</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- نافذة كلمة سر الإدارة -->
+    <div id="password-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 hidden backdrop-blur-md">
+        <div class="glass-panel rounded-3xl w-full max-w-sm p-6 space-y-6 relative border border-workshop-border text-center">
+            <h3 class="font-bold text-lg text-workshop-gold">لوحة تحكم الورشة</h3>
+            <form onsubmit="verifyPassword(event)" class="space-y-4">
+                <div class="relative">
+                    <input type="password" id="owner-pass" placeholder="أدخل كلمة السر..." required class="w-full pl-10 pr-4 py-2.5 rounded-xl bg-workshop-bg border border-workshop-border text-white text-center focus:outline-none focus:border-workshop-gold">
+                    <button type="button" onclick="togglePasswordVisibility()" class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-workshop-gold">
+                        <i id="eye-icon" data-lucide="eye" class="w-5 h-5"></i>
+                    </button>
+                </div>
+                <p id="pass-err" class="text-red-400 text-xs hidden">كلمة السر غير صحيحة!</p>
+                <div class="flex gap-3">
+                    <button type="button" onclick="closePasswordModal()" class="w-1/2 py-2.5 rounded-xl border border-white/10 text-gray-300 text-xs">إلغاء</button>
+                    <button type="submit" class="w-1/2 py-2.5 rounded-xl btn-gold text-xs">دخول</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- التذييل (الفوتر) -->
+    <footer class="glass-panel border-t border-workshop-border/30 py-6 mt-20 text-center text-xs text-gray-400 z-10">
+        <p>© 2026 ورشة السعيد أبو السعود (أبو معاذ) - أثاث وموبيليا عمولة بأعلى جودة</p>
+    </footer>
+
+    <script>
+        const WHATSAPP_NUMBER = "201010701854";
+        const OWNER_PASSWORD = "moaz10";
+
+        function runIntro() {
+            const introBar = document.getElementById('intro-bar');
+            const introScreen = document.getElementById('intro-screen');
+            let progress = 0;
+
+            const interval = setInterval(() => {
+                progress += Math.floor(Math.random() * 15) + 12;
+                if (progress >= 100) {
+                    progress = 100;
+                    introBar.style.width = '100%';
+                    clearInterval(interval);
+                    setTimeout(() => {
+                        introScreen.classList.add('intro-hidden');
+                        revealOnScroll();
+                    }, 500);
+                } else {
+                    introBar.style.width = `${progress}%`;
+                }
+            }, 90);
+        }
+
+        window.addEventListener('load', runIntro);
+
+        let products = JSON.parse(localStorage.getItem('workshop_furniture_db')) || [];
+        let videos = JSON.parse(localStorage.getItem('workshop_videos_db')) || [];
+        
+        let isOwnerMode = false;
+        let activeFilter = 'All';
+        const categoryNames = { 'All': 'الكل', 'Bedrooms': 'غرف نوم وسفرة', 'Salons': 'أنتريهات وصالونات', 'Kitchens': 'مطابخ ودريسينج', 'Custom': 'تفصيل عمولة' };
+
+        function createWaUrl(text) { return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(text)}`; }
+        document.getElementById('floating-wa-btn').href = createWaUrl("مرحباً معلم سعيد، أود الاستفسار عن تفصيل أثاث عمولة.");
+
+        const cursorGlow = document.getElementById('cursor-glow');
+        window.addEventListener('mousemove', (e) => {
+            cursorGlow.style.left = `${e.clientX}px`;
+            cursorGlow.style.top = `${e.clientY}px`;
+        });
+
+        function togglePasswordVisibility() {
+            const passInput = document.getElementById('owner-pass');
+            const eyeIcon = document.getElementById('eye-icon');
+            if (passInput.type === 'password') {
+                passInput.type = 'text';
+                eyeIcon.setAttribute('data-lucide', 'eye-off');
+            } else {
+                passInput.type = 'password';
+                eyeIcon.setAttribute('data-lucide', 'eye');
+            }
+            lucide.createIcons();
+        }
+
+        function handleFileSelect(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(evt) {
+                    document.getElementById('prod-image').value = evt.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function handleVideoFileSelect(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(evt) {
+                    document.getElementById('vid-url').value = evt.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function sendCustomOrder(e) {
+            e.preventDefault();
+            const type = document.getElementById('calc-type').value;
+            const notes = document.getElementById('calc-notes').value;
+
+            const msg = `مرحباً معلم سعيد، أرغب في أخذ عرض سعر وتفصيل عمولة:\n- القطعة المطلوبة: ${type}\n- التفاصيل والمقاسات: ${notes || 'لا يوجد'}`;
+            window.open(createWaUrl(msg), '_blank');
+        }
+
+        function renderFilters() {
+            const container = document.getElementById('category-filters');
+            container.innerHTML = Object.keys(categoryNames).map(cat => `
+                <button onclick="setFilter('${cat}')" class="px-5 py-2.5 rounded-xl text-xs font-bold whitespace-nowrap transition-all duration-300 ${
+                    activeFilter === cat ? 'btn-gold scale-105' : 'glass-panel text-gray-300 hover:text-white hover:border-workshop-gold/50'
+                }">${categoryNames[cat]}</button>
+            `).join('');
+        }
+
+        function setFilter(cat) { activeFilter = cat; renderFilters(); renderProducts(); }
+
+        function renderVideos() {
+            const grid = document.getElementById('videos-grid');
+            if (videos.length === 0) {
+                grid.innerHTML = `
+                    <div class="col-span-full text-center py-12 glass-panel rounded-3xl space-y-3">
+                        <i data-lucide="video-off" class="w-12 h-12 text-workshop-gold mx-auto opacity-60"></i>
+                        <p class="text-gray-300 font-bold">لا توجد فيديوهات مرفوعة للورشة حالياً.</p>
+                        <p class="text-xs text-gray-500">قم بتسجيل الدخول بكلمة السر لإضافة فيديوهات من جهازك أو بروابط مباشرة.</p>
+                    </div>
+                `;
+                lucide.createIcons();
+                return;
+            }
+
+            grid.innerHTML = videos.map(v => `
+                <div class="tilt-card rounded-2xl overflow-hidden flex flex-col justify-between group">
+                    <div class="relative w-full bg-black/80 overflow-hidden aspect-video flex items-center justify-center">
+                        <video src="${v.url}" controls class="w-full h-full object-cover"></video>
+                        ${isOwnerMode ? `
+                            <button onclick="deleteVideo('${v.id}')" class="absolute top-3 left-3 p-2 rounded-lg bg-red-600 text-white z-20 shadow-lg hover:scale-105 transition-transform"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                        ` : ''}
+                    </div>
+                    <div class="p-4 flex items-center justify-between">
+                        <h4 class="font-bold text-sm text-white">${v.title}</h4>
+                        <span class="text-[10px] text-workshop-gold px-2.5 py-1 rounded-full bg-workshop-gold/10 border border-workshop-gold/20">فيديو ورشة</span>
+                    </div>
+                </div>
+            `).join('');
+            lucide.createIcons();
+        }
+
+        function renderProducts() {
+            const grid = document.getElementById('product-grid');
+            const filtered = activeFilter === 'All' ? products : products.filter(p => p.category === activeFilter);
+
+            if (filtered.length === 0) {
+                grid.innerHTML = `
+                    <div class="col-span-full text-center py-16 glass-panel rounded-3xl space-y-3">
+                        <i data-lucide="image-off" class="w-12 h-12 text-workshop-gold mx-auto opacity-60"></i>
+                        <p class="text-gray-300 font-bold">لا توجد تصاميم مسجلة حالياً في هذا القسم.</p>
+                        <p class="text-xs text-gray-500">اضغط على زر (إدارة الورشة) بالأعلى لإضافة صور أعمالك الخاصة.</p>
+                    </div>
+                `;
+                lucide.createIcons();
+                return;
+            }
+
+            grid.innerHTML = filtered.map(p => `
+                <div class="tilt-card rounded-2xl overflow-hidden flex flex-col justify-between group">
+                    <div class="relative w-full bg-black/50 overflow-hidden min-h-[230px] flex items-center justify-center p-2">
+                        <img src="${p.image}" alt="${p.title}" class="w-full h-auto max-h-[380px] object-contain rounded-xl group-hover:scale-105 transition-transform duration-700 ease-out">
+                        <span class="absolute top-3 right-3 px-3 py-1 rounded-full bg-workshop-bg/90 backdrop-blur-md text-[10px] font-extrabold text-workshop-gold border border-workshop-border z-10">
+                            ${categoryNames[p.category] || p.category}
+                        </span>
+                        ${isOwnerMode ? `
+                            <div class="absolute top-3 left-3 flex gap-2 z-25">
+                                <button onclick="editProduct('${p.id}')" class="p-2 rounded-lg bg-workshop-gold text-workshop-bg"><i data-lucide="edit-2" class="w-3.5 h-3.5"></i></button>
+                                <button onclick="deleteProduct('${p.id}')" class="p-2 rounded-lg bg-red-600 text-white"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
+                            </div>
+                        ` : ''}
+                    </div>
+                    <div class="p-5 space-y-4 flex-1 flex flex-col justify-between">
+                        <div>
+                            <h4 class="font-bold text-base text-white group-hover:text-workshop-gold transition-colors duration-300">${p.title}</h4>
+                        </div>
+                        <a href="${createWaUrl(`مرحباً معلم سعيد، حابب أستفسر عن تفصيل موديل: ${p.title}`)}" target="_blank" class="w-full py-3 rounded-xl border border-workshop-border text-xs text-center text-gray-200 hover:border-workshop-gold hover:text-workshop-gold hover:bg-workshop-gold/10 transition-all duration-300 flex items-center justify-center gap-2 font-bold">
+                            <i data-lucide="message-square" class="w-4 h-4 text-emerald-400"></i>
+                            <span>استفسر واطلب التفصيل</span>
+                        </a>
+                    </div>
+                </div>
+            `).join('');
+            lucide.createIcons();
+        }
+
+        function revealOnScroll() {
+            const reveals = document.querySelectorAll('.reveal');
+            reveals.forEach(el => {
+                const windowHeight = window.innerHeight;
+                const elementTop = el.getBoundingClientRect().top;
+                if (elementTop < windowHeight - 80) {
+                    el.classList.add('active');
+                }
+            });
+        }
+        window.addEventListener('scroll', revealOnScroll);
+
+        function toggleOwnerMode() {
+            if (isOwnerMode) { isOwnerMode = false; updateOwnerUI(); }
+            else { document.getElementById('password-modal').classList.remove('hidden'); }
+        }
+        function verifyPassword(e) {
+            e.preventDefault();
+            if (document.getElementById('owner-pass').value === OWNER_PASSWORD) {
+                isOwnerMode = true;
+                closePasswordModal();
+                updateOwnerUI();
+            } else { document.getElementById('pass-err').classList.remove('hidden'); }
+        }
+        function closePasswordModal() { document.getElementById('password-modal').classList.add('hidden'); }
+        
+        function updateOwnerUI() {
+            document.getElementById('owner-action-btns').classList.toggle('hidden', !isOwnerMode);
+            document.getElementById('owner-btn-text').innerText = isOwnerMode ? 'إغلاق الإدارة' : 'إدارة الورشة';
+            renderProducts();
+            renderVideos();
+        }
+
+        function openAddModal() {
+            document.getElementById('modal-title').innerText = 'إضافة تصميم جديد';
+            document.getElementById('product-form').reset();
+            document.getElementById('prod-id').value = '';
+            document.getElementById('prod-file').value = '';
+            document.getElementById('product-modal').classList.remove('hidden');
+        }
+        function closeModal() { document.getElementById('product-modal').classList.add('hidden'); }
+        
+        function openVideoModal() {
+            document.getElementById('video-form').reset();
+            document.getElementById('vid-file').value = '';
+            document.getElementById('video-modal').classList.remove('hidden');
+        }
+        function closeVideoModal() { document.getElementById('video-modal').classList.add('hidden'); }
+
+        function editProduct(id) {
+            const p = products.find(x => x.id === id);
+            if (!p) return;
+            document.getElementById('prod-id').value = p.id;
+            document.getElementById('prod-title').value = p.title;
+            document.getElementById('prod-category').value = p.category;
+            document.getElementById('prod-image').value = p.image;
+            document.getElementById('product-modal').classList.remove('hidden');
+        }
+        function deleteProduct(id) {
+            if (confirm('تأكيد الحذف؟')) {
+                products = products.filter(x => x.id !== id);
+                localStorage.setItem('workshop_furniture_db', JSON.stringify(products));
+                renderProducts();
+            }
+        }
+
+        function deleteVideo(id) {
+            if (confirm('تأكيد حذف الفيديو؟')) {
+                videos = videos.filter(x => x.id !== id);
+                localStorage.setItem('workshop_videos_db', JSON.stringify(videos));
+                renderVideos();
+            }
+        }
+
+        function handleFormSubmit(e) {
+            e.preventDefault();
+            const id = document.getElementById('prod-id').value;
+            const item = {
+                id: id || Date.now().toString(),
+                title: document.getElementById('prod-title').value,
+                category: document.getElementById('prod-category').value,
+                image: document.getElementById('prod-image').value || ''
+            };
+            if (id) {
+                products = products.map(x => x.id === id ? item : x);
+            } else {
+                products.unshift(item);
+            }
+            localStorage.setItem('workshop_furniture_db', JSON.stringify(products));
+            closeModal();
+            renderProducts();
+        }
+
+        function handleVideoSubmit(e) {
+            e.preventDefault();
+            const item = {
+                id: Date.now().toString(),
+                title: document.getElementById('vid-title').value,
+                url: document.getElementById('vid-url').value
+            };
+            videos.unshift(item);
+            localStorage.setItem('workshop_videos_db', JSON.stringify(videos));
+            closeVideoModal();
+            renderVideos();
+        }
+
+        renderFilters();
+        renderProducts();
+        renderVideos();
+    </script>
+</body>
+</html>

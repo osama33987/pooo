@@ -336,12 +336,9 @@
                 </div>
                 
                 <div class="space-y-2">
-                    <label class="block text-gray-300">صورة التصميم</label>
-                    <div class="flex flex-col gap-2">
-                        <input type="file" id="prod-file" accept="image/*" onchange="handleFileSelect(event)" class="w-full text-xs text-gray-400 file:mr-2 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-workshop-gold/20 file:text-workshop-gold">
-                        <span class="text-center text-[10px] text-gray-500">أو ضع رابط الصورة مباشرة هنا</span>
-                        <input type="url" id="prod-image" placeholder="https://..." class="w-full px-4 py-2.5 rounded-xl bg-workshop-bg border border-workshop-border text-white text-xs focus:outline-none focus:border-workshop-gold">
-                    </div>
+                    <label class="block text-gray-300">رابط الصورة (يدعم رابط جوجل دريف أو أي رابط مباشر)</label>
+                    <input type="url" id="prod-image" required placeholder="الصق رابط جوجل دريف أو رابط الصورة هنا..." class="w-full px-4 py-2.5 rounded-xl bg-workshop-bg border border-workshop-border text-white text-xs focus:outline-none focus:border-workshop-gold">
+                    <p class="text-[10px] text-gray-400">تأكد فقط أن مشاركة الملف على جوجل دريف عامة (أي شخص لديه الرابط).</p>
                 </div>
 
                 <div class="pt-2 flex gap-3">
@@ -367,12 +364,9 @@
                 </div>
                 
                 <div class="space-y-2">
-                    <label class="block text-gray-300">ملف الفيديو</label>
-                    <div class="flex flex-col gap-2">
-                        <input type="file" id="vid-file" accept="video/*" onchange="handleVideoFileSelect(event)" class="w-full text-xs text-gray-400 file:mr-2 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-workshop-wood/30 file:text-workshop-gold">
-                        <span class="text-center text-[10px] text-gray-500">أو ضع رابط الفيديو مباشرة (مثل رابط يوتيوب أو ملف مباشر)</span>
-                        <input type="url" id="vid-url" placeholder="https://..." class="w-full px-4 py-2.5 rounded-xl bg-workshop-bg border border-workshop-border text-white text-xs focus:outline-none focus:border-workshop-gold">
-                    </div>
+                    <label class="block text-gray-300">رابط الفيديو (يدعم جوجل دريف أو روابط مباشرة)</label>
+                    <input type="url" id="vid-url" required placeholder="الصق رابط فيديو جوجل دريف هنا..." class="w-full px-4 py-2.5 rounded-xl bg-workshop-bg border border-workshop-border text-white text-xs focus:outline-none focus:border-workshop-gold">
+                    <p class="text-[10px] text-gray-400">سيتم تحويل رابط جوجل دريف تلقائياً ليعمل بسلاسة أمام الزبائن.</p>
                 </div>
 
                 <div class="pt-2 flex gap-3">
@@ -442,6 +436,30 @@
         let activeFilter = 'All';
         const categoryNames = { 'All': 'الكل', 'Bedrooms': 'غرف نوم وسفرة', 'Salons': 'أنتريهات وصالونات', 'Kitchens': 'مطابخ ودريسينج', 'Custom': 'تفصيل عمولة' };
 
+        // تحويل روابط جوجل دريف تلقائياً لتعمل كرابط عرض مباشر
+        function formatDriveUrl(url, isVideo = false) {
+            if (!url) return '';
+            let fileId = '';
+            if (url.includes('/file/d/')) {
+                const parts = url.split('/file/d/');
+                if (parts.length > 1) {
+                    fileId = parts[1].split('/')[0];
+                }
+            } else if (url.includes('id=')) {
+                const urlParams = new URLSearchParams(url.split('?')[1]);
+                fileId = urlParams.get('id');
+            }
+
+            if (fileId) {
+                if (isVideo) {
+                    return `https://www.googleapis.com/drive/v3/files/${fileId}?alt=media`;
+                } else {
+                    return `https://lh3.googleusercontent.com/d/${fileId}`;
+                }
+            }
+            return url;
+        }
+
         function createWaUrl(text) { return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(text)}`; }
         document.getElementById('floating-wa-btn').href = createWaUrl("مرحباً معلم سعيد، أود الاستفسار عن تفصيل أثاث عمولة.");
 
@@ -462,28 +480,6 @@
                 eyeIcon.setAttribute('data-lucide', 'eye');
             }
             lucide.createIcons();
-        }
-
-        function handleFileSelect(e) {
-            const file = e.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(evt) {
-                    document.getElementById('prod-image').value = evt.target.result;
-                };
-                reader.readAsDataURL(file);
-            }
-        }
-
-        function handleVideoFileSelect(e) {
-            const file = e.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(evt) {
-                    document.getElementById('vid-url').value = evt.target.result;
-                };
-                reader.readAsDataURL(file);
-            }
         }
 
         function sendCustomOrder(e) {
@@ -513,27 +509,30 @@
                     <div class="col-span-full text-center py-12 glass-panel rounded-3xl space-y-3">
                         <i data-lucide="video-off" class="w-12 h-12 text-workshop-gold mx-auto opacity-60"></i>
                         <p class="text-gray-300 font-bold">لا توجد فيديوهات مرفوعة للورشة حالياً.</p>
-                        <p class="text-xs text-gray-500">قم بتسجيل الدخول بكلمة السر لإضافة فيديوهات من جهازك أو بروابط مباشرة.</p>
+                        <p class="text-xs text-gray-500">قم بتسجيل الدخول بكلمة السر لإضافة فيديوهات من جوجل دريف.</p>
                     </div>
                 `;
                 lucide.createIcons();
                 return;
             }
 
-            grid.innerHTML = videos.map(v => `
-                <div class="tilt-card rounded-2xl overflow-hidden flex flex-col justify-between group">
-                    <div class="relative w-full bg-black/80 overflow-hidden aspect-video flex items-center justify-center">
-                        <video src="${v.url}" controls class="w-full h-full object-cover"></video>
-                        ${isOwnerMode ? `
-                            <button onclick="deleteVideo('${v.id}')" class="absolute top-3 left-3 p-2 rounded-lg bg-red-600 text-white z-20 shadow-lg hover:scale-105 transition-transform"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
-                        ` : ''}
+            grid.innerHTML = videos.map(v => {
+                const directVideoUrl = formatDriveUrl(v.url, true);
+                return `
+                    <div class="tilt-card rounded-2xl overflow-hidden flex flex-col justify-between group">
+                        <div class="relative w-full bg-black/80 overflow-hidden aspect-video flex items-center justify-center">
+                            <video src="${directVideoUrl}" controls class="w-full h-full object-cover"></video>
+                            ${isOwnerMode ? `
+                                <button onclick="deleteVideo('${v.id}')" class="absolute top-3 left-3 p-2 rounded-lg bg-red-600 text-white z-20 shadow-lg hover:scale-105 transition-transform"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                            ` : ''}
+                        </div>
+                        <div class="p-4 flex items-center justify-between">
+                            <h4 class="font-bold text-sm text-white">${v.title}</h4>
+                            <span class="text-[10px] text-workshop-gold px-2.5 py-1 rounded-full bg-workshop-gold/10 border border-workshop-gold/20">فيديو ورشة</span>
+                        </div>
                     </div>
-                    <div class="p-4 flex items-center justify-between">
-                        <h4 class="font-bold text-sm text-white">${v.title}</h4>
-                        <span class="text-[10px] text-workshop-gold px-2.5 py-1 rounded-full bg-workshop-gold/10 border border-workshop-gold/20">فيديو ورشة</span>
-                    </div>
-                </div>
-            `).join('');
+                `;
+            }).join('');
             lucide.createIcons();
         }
 
@@ -553,31 +552,34 @@
                 return;
             }
 
-            grid.innerHTML = filtered.map(p => `
-                <div class="tilt-card rounded-2xl overflow-hidden flex flex-col justify-between group">
-                    <div class="relative w-full bg-black/50 overflow-hidden min-h-[230px] flex items-center justify-center p-2">
-                        <img src="${p.image}" alt="${p.title}" class="w-full h-auto max-h-[380px] object-contain rounded-xl group-hover:scale-105 transition-transform duration-700 ease-out">
-                        <span class="absolute top-3 right-3 px-3 py-1 rounded-full bg-workshop-bg/90 backdrop-blur-md text-[10px] font-extrabold text-workshop-gold border border-workshop-border z-10">
-                            ${categoryNames[p.category] || p.category}
-                        </span>
-                        ${isOwnerMode ? `
-                            <div class="absolute top-3 left-3 flex gap-2 z-25">
-                                <button onclick="editProduct('${p.id}')" class="p-2 rounded-lg bg-workshop-gold text-workshop-bg"><i data-lucide="edit-2" class="w-3.5 h-3.5"></i></button>
-                                <button onclick="deleteProduct('${p.id}')" class="p-2 rounded-lg bg-red-600 text-white"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
-                            </div>
-                        ` : ''}
-                    </div>
-                    <div class="p-5 space-y-4 flex-1 flex flex-col justify-between">
-                        <div>
-                            <h4 class="font-bold text-base text-white group-hover:text-workshop-gold transition-colors duration-300">${p.title}</h4>
+            grid.innerHTML = filtered.map(p => {
+                const directImageUrl = formatDriveUrl(p.image, false);
+                return `
+                    <div class="tilt-card rounded-2xl overflow-hidden flex flex-col justify-between group">
+                        <div class="relative w-full bg-black/50 overflow-hidden min-h-[230px] flex items-center justify-center p-2">
+                            <img src="${directImageUrl}" alt="${p.title}" class="w-full h-auto max-h-[380px] object-contain rounded-xl group-hover:scale-105 transition-transform duration-700 ease-out">
+                            <span class="absolute top-3 right-3 px-3 py-1 rounded-full bg-workshop-bg/90 backdrop-blur-md text-[10px] font-extrabold text-workshop-gold border border-workshop-border z-10">
+                                ${categoryNames[p.category] || p.category}
+                            </span>
+                            ${isOwnerMode ? `
+                                <div class="absolute top-3 left-3 flex gap-2 z-25">
+                                    <button onclick="editProduct('${p.id}')" class="p-2 rounded-lg bg-workshop-gold text-workshop-bg"><i data-lucide="edit-2" class="w-3.5 h-3.5"></i></button>
+                                    <button onclick="deleteProduct('${p.id}')" class="p-2 rounded-lg bg-red-600 text-white"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
+                                </div>
+                            ` : ''}
                         </div>
-                        <a href="${createWaUrl(`مرحباً معلم سعيد، حابب أستفسر عن تفصيل موديل: ${p.title}`)}" target="_blank" class="w-full py-3 rounded-xl border border-workshop-border text-xs text-center text-gray-200 hover:border-workshop-gold hover:text-workshop-gold hover:bg-workshop-gold/10 transition-all duration-300 flex items-center justify-center gap-2 font-bold">
-                            <i data-lucide="message-square" class="w-4 h-4 text-emerald-400"></i>
-                            <span>استفسر واطلب التفصيل</span>
-                        </a>
+                        <div class="p-5 space-y-4 flex-1 flex flex-col justify-between">
+                            <div>
+                                <h4 class="font-bold text-base text-white group-hover:text-workshop-gold transition-colors duration-300">${p.title}</h4>
+                            </div>
+                            <a href="${createWaUrl(`مرحباً معلم سعيد، حابب أستفسر عن تفصيل موديل: ${p.title}`)}" target="_blank" class="w-full py-3 rounded-xl border border-workshop-border text-xs text-center text-gray-200 hover:border-workshop-gold hover:text-workshop-gold hover:bg-workshop-gold/10 transition-all duration-300 flex items-center justify-center gap-2 font-bold">
+                                <i data-lucide="message-square" class="w-4 h-4 text-emerald-400"></i>
+                                <span>استفسر واطلب التفصيل</span>
+                            </a>
+                        </div>
                     </div>
-                </div>
-            `).join('');
+                `;
+            }).join('');
             lucide.createIcons();
         }
 
@@ -618,14 +620,12 @@
             document.getElementById('modal-title').innerText = 'إضافة تصميم جديد';
             document.getElementById('product-form').reset();
             document.getElementById('prod-id').value = '';
-            document.getElementById('prod-file').value = '';
             document.getElementById('product-modal').classList.remove('hidden');
         }
         function closeModal() { document.getElementById('product-modal').classList.add('hidden'); }
         
         function openVideoModal() {
             document.getElementById('video-form').reset();
-            document.getElementById('vid-file').value = '';
             document.getElementById('video-modal').classList.remove('hidden');
         }
         function closeVideoModal() { document.getElementById('video-modal').classList.add('hidden'); }
@@ -662,7 +662,7 @@
                 id: id || Date.now().toString(),
                 title: document.getElementById('prod-title').value,
                 category: document.getElementById('prod-category').value,
-                image: document.getElementById('prod-image').value || ''
+                image: document.getElementById('prod-image').value
             };
             if (id) {
                 products = products.map(x => x.id === id ? item : x);
